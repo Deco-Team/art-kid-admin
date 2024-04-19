@@ -5,11 +5,12 @@ import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom'
+import Label from '~/components/label'
 import useAuth from '~/hooks/use-auth'
 import { Course } from '~/interface'
-import { formatCurrency } from '~/utils/format-number'
-import Label from '~/components/label'
 import { notifyError, notifyLoading, notifySuccess } from '~/toastify'
+import { formatCurrency } from '~/utils/format-number'
+import LessonCard from '../lesson-card'
 import CancelCourseModal from '../modal-reject'
 
 // ----------------------------------------------------------------------
@@ -99,7 +100,7 @@ export default function CourseDetailView() {
         )}
       </Box>
 
-      <Box display='flex'>
+      <Box display='flex' sx={{ marginBottom: '24px' }}>
         <Box sx={{ width: '30%', marginRight: '24px' }}>{renderImg}</Box>
         <Box sx={{ width: '65%' }}>
           <Typography variant='h4'>General Information</Typography>
@@ -134,6 +135,19 @@ export default function CourseDetailView() {
             </Typography>
           )}
         </Box>
+      </Box>
+      <Typography variant='h6'>Lessons</Typography>
+      <Box display='flex' sx={{ marginTop: '16px', flexWrap: 'wrap' }}>
+        {course.lessons?.map((lesson) => (
+          <LessonCard
+            key={lesson.createdAt}
+            title={lesson.title}
+            description={lesson.description}
+            url={lesson.video}
+            type={lesson.type}
+            image={course.thumbnail || ''}
+          />
+        ))}
       </Box>
     </Container>
   )

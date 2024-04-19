@@ -37,15 +37,27 @@ export interface Course {
   description: string
   objective: string
   thumbnail: string
-  duration: string
+  duration: number
   price: number
   level: string
   status: string
+  lessons: Lesson[]
   createdAt: string
   updatedAt: string
   slug: string
   provider: CourseProvider
+  type: string
   rejectReason: string
+}
+
+interface Lesson {
+  title: string
+  description: string
+  objective: string
+  video: string
+  type: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface CourseCardProps {
@@ -60,4 +72,12 @@ export interface OrderModalProps {
 
 export interface ICancelOrderProps {
   rejectReason: string
+}
+
+export interface LessonCardProps {
+  title: string
+  description: string
+  url: string
+  type: string
+  image: string
 }
