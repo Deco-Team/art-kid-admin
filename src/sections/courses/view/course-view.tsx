@@ -8,6 +8,9 @@ import useAuth from '~/hooks/use-auth'
 import { Course } from '~/interface'
 import CourseCard from '../course-card'
 import Loading from '~/components/loading/Loading'
+import { DEFAULT_PER_PAGE } from '~/constants'
+import usePagination from '~/hooks/use-pagination'
+import { Pagination } from '@mui/material'
 
 // ----------------------------------------------------------------------
 
@@ -15,11 +18,14 @@ export default function CoursesView() {
   const [courses, setCourses] = useState<Course[]>([])
   const { idToken } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
+  const [page, setPage] = useState<number>(1)
+  const [totalPages, setTotalPages] = useState<number>(1)
+
   const getCourseData = async () => {
     setIsLoading(true)
     try {
       const courseData = await axios.get(
-        'https://art-kids-api.onrender.com/courses/admin?page=1&limit=10&sort=createdAt.asc%20or%20createdAt.desc_email.asc',
+        `https://art-kids-api.onrender.com/courses/admin?page=${page}&limit=${DEFAULT_PER_PAGE}&sort=createdAt.asc%20or%20createdAt.desc_email.asc`,
         {
           headers: {
             accept: 'application/json',
@@ -28,6 +34,7 @@ export default function CoursesView() {
         }
       )
       setCourses(courseData.data.data.docs)
+      setTotalPages(Math.ceil(totalPages / DEFAULT_PER_PAGE))
     } catch (error) {
       console.log(error)
     } finally {
@@ -38,6 +45,14 @@ export default function CoursesView() {
     getCourseData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const _DATA = usePagination(courses, DEFAULT_PER_PAGE)
+  const count = totalPages
+
+  const handleChange = (_e: React.ChangeEvent<unknown>, pageNumber: number) => {
+    setPage(pageNumber)
+    _DATA.jump(pageNumber)
+  }
 
   return (
     <>
@@ -50,12 +65,21 @@ export default function CoursesView() {
           </Typography>
 
           <Grid container spacing={3}>
-            {courses.map((course) => (
+            {_DATA.currentData().map((course) => (
               <Grid key={course._id} xs={12} sm={6} md={3}>
                 <CourseCard course={course} />
               </Grid>
             ))}
           </Grid>
+          <Pagination
+            count={count}
+            size='medium'
+            page={page}
+            variant='outlined'
+            shape='rounded'
+            onChange={handleChange}
+            sx={{ marginTop: '16px' }}
+          />
         </Container>
       )}
     </>
