@@ -1,13 +1,12 @@
-import React, { useState } from 'react'
-import Stack from '@mui/material/Stack'
 import Avatar from '@mui/material/Avatar'
-import Popover from '@mui/material/Popover'
-import TableRow from '@mui/material/TableRow'
-import Checkbox from '@mui/material/Checkbox'
-import MenuItem from '@mui/material/MenuItem'
-import TableCell from '@mui/material/TableCell'
-import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
+import MenuItem from '@mui/material/MenuItem'
+import Popover from '@mui/material/Popover'
+import Stack from '@mui/material/Stack'
+import TableCell from '@mui/material/TableCell'
+import TableRow from '@mui/material/TableRow'
+import Typography from '@mui/material/Typography'
+import React, { useState } from 'react'
 import Iconify from '~/components/iconify/iconify'
 import Label from '~/components/label'
 
@@ -17,7 +16,6 @@ interface InstructorTableRowProps {
   avatarUrl: string
   email: string
   expertise: string
-  isVerified: boolean
   status: string
   handleClick: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
@@ -28,9 +26,7 @@ const InstructorTableRow: React.FC<InstructorTableRowProps> = ({
   avatarUrl,
   email,
   expertise,
-  isVerified,
-  status,
-  handleClick
+  status
 }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
 
@@ -45,10 +41,6 @@ const InstructorTableRow: React.FC<InstructorTableRowProps> = ({
   return (
     <>
       <TableRow hover tabIndex={-1} role='checkbox' selected={selected}>
-        <TableCell padding='checkbox'>
-          <Checkbox disableRipple checked={selected} onChange={handleClick} />
-        </TableCell>
-
         <TableCell component='th' scope='row' padding='none'>
           <Stack direction='row' alignItems='center' spacing={2}>
             <Avatar alt={name} src={avatarUrl} />
@@ -61,8 +53,6 @@ const InstructorTableRow: React.FC<InstructorTableRowProps> = ({
         <TableCell>{email}</TableCell>
 
         <TableCell>{expertise}</TableCell>
-
-        <TableCell align='center'>{isVerified ? 'Yes' : 'No'}</TableCell>
 
         <TableCell>
           <Label color={(status === 'inactived' && 'error') || 'success'}>{status}</Label>
