@@ -7,12 +7,12 @@ import TableBody from '@mui/material/TableBody'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
 import Typography from '@mui/material/Typography'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-import { instructors } from '~/_mock/instructors'
-
+import axios from 'axios'
 import Iconify from '~/components/iconify/iconify'
 import Scrollbar from '~/components/scrollbar'
+import useAuth from '~/hooks/use-auth'
 import InstructorTableHead from '../instructor-table-head'
 import InstructorTableRow from '../instructor-table-row'
 import InstructorTableToolbar from '../intructor-table-toolbar'
@@ -21,22 +21,25 @@ import TableNoData from '../table-no-data'
 import { applyFilter, emptyRows, getComparator } from '../utils'
 
 interface Instructor {
-  id: string
+  _id: string
   name: string
-  expertise: string
-  status: string
   email: string
-  avatarUrl: string
-  isVerified: boolean
+  phone: string
+  gender: string
+  status: string
+  image: string
+  expertise: string
 }
 
 export default function InstructorPage() {
-  const [page, setPage] = useState<number>(0)
+  const [page, setPage] = useState<number>(1)
   const [order, setOrder] = useState<'asc' | 'desc'>('asc')
   const [selected, setSelected] = useState<string[]>([])
   const [orderBy, setOrderBy] = useState<string>('name')
   const [filterName, setFilterName] = useState<string>('')
   const [rowsPerPage, setRowsPerPage] = useState<number>(5)
+  const [instructorsData, setInstructorsData] = useState<Instructor[]>([])
+  const { idToken } = useAuth()
 
   const handleSort = (_event: React.MouseEvent<unknown>, id: string) => {
     const isAsc = orderBy === id && order === 'asc'
@@ -48,7 +51,7 @@ export default function InstructorPage() {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = instructors.map((n) => n.name)
+      const newSelecteds = instructorsData.map((n) => n.name)
       setSelected(newSelecteds)
       return
     }
@@ -75,22 +78,43 @@ export default function InstructorPage() {
   }
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPage(0)
+    setPage(1)
     setRowsPerPage(parseInt(event.target.value, 10))
   }
 
   const handleFilterByName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPage(0)
+    setPage(1)
     setFilterName(event.target.value)
   }
 
   const dataFiltered = applyFilter<Instructor>({
-    inputData: instructors,
+    inputData: instructorsData,
     comparator: getComparator<Instructor>(order, orderBy as keyof Instructor),
     filterName
   })
 
   const notFound = !dataFiltered.length && !!filterName
+
+  const getInstructorsData = async () => {
+    try {
+      const instructorData = await axios.get(
+        `https://art-kids-api.onrender.com/providers/admin?page=${page}&limit=10&sort=createdAt.asc%20or%20createdAt.desc_email.asc`,
+        {
+          headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${idToken}`
+          }
+        }
+      )
+      setInstructorsData(instructorData.data.data.docs)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    getInstructorsData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page])
 
   return (
     <Container>
@@ -112,7 +136,7 @@ export default function InstructorPage() {
               <InstructorTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={instructors.length}
+                rowCount={instructorsData.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
@@ -120,26 +144,24 @@ export default function InstructorPage() {
                   { id: 'name', label: 'Name' },
                   { id: 'email', label: 'Email' },
                   { id: 'expertise', label: 'Expertise' },
-                  { id: 'isVerified', label: 'Verified', align: 'center' },
                   { id: 'status', label: 'Status' },
                   { id: '', label: '' }
                 ]}
               />
               <TableBody>
-                {dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                {dataFiltered.map((row) => (
                   <InstructorTableRow
-                    key={row.id}
+                    key={row._id}
                     name={row.name}
                     expertise={row.expertise}
                     status={row.status}
                     email={row.email}
-                    avatarUrl={row.avatarUrl}
-                    isVerified={row.isVerified}
+                    avatarUrl={row.image}
                     selected={selected.indexOf(row.name) !== -1}
                     handleClick={(event) => handleClick(event as unknown as React.MouseEvent<unknown>, row.name)}
                   />
                 ))}
-                <TableEmptyRows height={77} emptyRows={emptyRows(page, rowsPerPage, instructors.length)} />
+                <TableEmptyRows height={77} emptyRows={emptyRows(page, rowsPerPage, instructorsData.length)} />
                 {notFound && <TableNoData query={filterName} />}
               </TableBody>
             </Table>
@@ -148,7 +170,7 @@ export default function InstructorPage() {
         <TablePagination
           page={page}
           component='div'
-          count={instructors.length}
+          count={instructorsData.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}

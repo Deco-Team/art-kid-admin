@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box'
-import Checkbox from '@mui/material/Checkbox'
 import TableCell, { TableCellProps } from '@mui/material/TableCell'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
@@ -25,15 +24,7 @@ interface InstructorTableHeadProps {
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-export default function InstructorTableHead({
-  order,
-  orderBy,
-  rowCount,
-  headLabel,
-  numSelected,
-  onRequestSort,
-  onSelectAllClick
-}: InstructorTableHeadProps) {
+export default function InstructorTableHead({ order, orderBy, headLabel, onRequestSort }: InstructorTableHeadProps) {
   const onSort = (property: string) => (event: React.MouseEvent<unknown>) => {
     onRequestSort(event, property)
   }
@@ -41,14 +32,6 @@ export default function InstructorTableHead({
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding='checkbox'>
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-          />
-        </TableCell>
-
         {headLabel.map((headCell) => (
           <TableCell
             key={headCell.id}
