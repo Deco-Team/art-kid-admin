@@ -12,6 +12,11 @@ const navConfig = [
     title: 'Instructors',
     path: '/instructors',
     icon: icon('ic_user')
+  },
+  {
+    title: 'Courses',
+    path: '/courses',
+    icon: icon('ic_cart')
   }
 ]
 

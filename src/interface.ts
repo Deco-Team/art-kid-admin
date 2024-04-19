@@ -24,3 +24,40 @@ export interface IAuthContextProps {
   logout: () => Promise<void>
   refreshToken: () => Promise<void>
 }
+
+export interface CourseProvider {
+  _id: string
+  name: string
+  image: string
+}
+
+export interface Course {
+  _id: string
+  title: string
+  description: string
+  objective: string
+  thumbnail: string
+  duration: string
+  price: number
+  level: string
+  status: string
+  createdAt: string
+  updatedAt: string
+  slug: string
+  provider: CourseProvider
+  rejectReason: string
+}
+
+export interface CourseCardProps {
+  course: Course
+}
+
+export interface OrderModalProps {
+  open: boolean
+  handleClose: () => void
+  courseId: string
+}
+
+export interface ICancelOrderProps {
+  rejectReason: string
+}
