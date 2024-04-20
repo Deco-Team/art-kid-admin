@@ -81,3 +81,18 @@ export interface LessonCardProps {
   type: string
   image: string
 }
+
+export interface IProvider {
+  _id: string
+  name: string
+  email: string
+  phone: string
+  gender: string
+  status: string
+  image: string
+  introduction: string
+  education: string
+  expertise: string
+  createdAt: string
+  updatedAt: string
+}

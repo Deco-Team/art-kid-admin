@@ -1,10 +1,9 @@
 import { Helmet } from 'react-helmet-async'
-
 import { CoursesView } from '~/sections/courses/view'
 
 // ----------------------------------------------------------------------
 
-export default function ProductsPage() {
+export default function CoursesPage() {
   return (
     <>
       <Helmet>

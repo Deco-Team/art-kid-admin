@@ -1,3 +1,4 @@
+import { Link } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton'
 import MenuItem from '@mui/material/MenuItem'
@@ -5,12 +6,13 @@ import Popover from '@mui/material/Popover'
 import Stack from '@mui/material/Stack'
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
-import Typography from '@mui/material/Typography'
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Iconify from '~/components/iconify/iconify'
 import Label from '~/components/label'
 
 interface InstructorTableRowProps {
+  id: string
   selected: boolean
   name: string
   avatarUrl: string
@@ -26,9 +28,11 @@ const InstructorTableRow: React.FC<InstructorTableRowProps> = ({
   avatarUrl,
   email,
   expertise,
-  status
+  status,
+  id
 }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
+  const navigate = useNavigate()
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -38,15 +42,19 @@ const InstructorTableRow: React.FC<InstructorTableRowProps> = ({
     setAnchorEl(null)
   }
 
+  const handleOnClick = (instructorId: string) => {
+    navigate(`/instructors/${instructorId}`)
+  }
+
   return (
     <>
       <TableRow hover tabIndex={-1} role='checkbox' selected={selected}>
         <TableCell component='th' scope='row' padding='none'>
           <Stack direction='row' alignItems='center' spacing={2}>
             <Avatar alt={name} src={avatarUrl} />
-            <Typography variant='subtitle2' noWrap>
+            <Link color='inherit' underline='hover' variant='subtitle2' noWrap onClick={() => handleOnClick(id)}>
               {name}
-            </Typography>
+            </Link>
           </Stack>
         </TableCell>
 

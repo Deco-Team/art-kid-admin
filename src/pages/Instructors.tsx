@@ -3,7 +3,7 @@ import InstructorPage from '~/sections/instructors/view/instructor-view'
 
 // ----------------------------------------------------------------------
 
-export default function UserPage() {
+export default function InstructorsPage() {
   return (
     <>
       <Helmet>

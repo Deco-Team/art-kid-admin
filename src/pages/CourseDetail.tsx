@@ -3,7 +3,7 @@ import { CourseDetailView } from '~/sections/course-detail/view'
 
 // ----------------------------------------------------------------------
 
-export default function ProductsPage() {
+export default function CourseDetailPage() {
   return (
     <>
       <Helmet>

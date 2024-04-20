@@ -19,6 +19,7 @@ import InstructorTableToolbar from '../intructor-table-toolbar'
 import TableEmptyRows from '../table-empty-row'
 import TableNoData from '../table-no-data'
 import { applyFilter, emptyRows, getComparator } from '../utils'
+import { useNavigate } from 'react-router-dom'
 
 interface Instructor {
   _id: string
@@ -32,7 +33,7 @@ interface Instructor {
 }
 
 export default function InstructorPage() {
-  const [page, setPage] = useState<number>(1)
+  const [page, setPage] = useState<number>(0)
   const [order, setOrder] = useState<'asc' | 'desc'>('asc')
   const [selected, setSelected] = useState<string[]>([])
   const [orderBy, setOrderBy] = useState<string>('name')
@@ -40,6 +41,7 @@ export default function InstructorPage() {
   const [rowsPerPage, setRowsPerPage] = useState<number>(5)
   const [instructorsData, setInstructorsData] = useState<Instructor[]>([])
   const { idToken } = useAuth()
+  const navigate = useNavigate()
 
   const handleSort = (_event: React.MouseEvent<unknown>, id: string) => {
     const isAsc = orderBy === id && order === 'asc'
@@ -98,7 +100,7 @@ export default function InstructorPage() {
   const getInstructorsData = async () => {
     try {
       const instructorData = await axios.get(
-        `https://art-kids-api.onrender.com/providers/admin?page=${page}&limit=10&sort=createdAt.asc%20or%20createdAt.desc_email.asc`,
+        `https://art-kids-api.onrender.com/providers/admin?page=${page + 1}&limit=10&sort=createdAt.asc%20or%20createdAt.desc_email.asc`,
         {
           headers: {
             accept: 'application/json',
@@ -111,6 +113,10 @@ export default function InstructorPage() {
       console.log(error)
     }
   }
+
+  const handleNewInstructorButton = () => {
+    navigate('/new-instructor')
+  }
   useEffect(() => {
     getInstructorsData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -120,7 +126,12 @@ export default function InstructorPage() {
     <Container>
       <Stack direction='row' alignItems='center' justifyContent='space-between' mb={5}>
         <Typography variant='h4'>Instructors</Typography>
-        <Button variant='contained' color='inherit' startIcon={<Iconify icon='eva:plus-fill' />}>
+        <Button
+          variant='contained'
+          color='inherit'
+          startIcon={<Iconify icon='eva:plus-fill' />}
+          onClick={handleNewInstructorButton}
+        >
           New Instructor
         </Button>
       </Stack>
@@ -151,6 +162,7 @@ export default function InstructorPage() {
               <TableBody>
                 {dataFiltered.map((row) => (
                   <InstructorTableRow
+                    id={row._id}
                     key={row._id}
                     name={row.name}
                     expertise={row.expertise}
