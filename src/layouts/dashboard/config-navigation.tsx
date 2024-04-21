@@ -1,4 +1,5 @@
 import SvgColor from '~/components/svg-color/svg-color'
+import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded'
 
 const icon = (name: string) => <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
 
@@ -17,6 +18,11 @@ const navConfig = [
     title: 'Courses',
     path: '/courses',
     icon: icon('ic_cart')
+  },
+  {
+    title: 'Order History',
+    path: '/history',
+    icon: <HistoryRoundedIcon />
   }
 ]
 

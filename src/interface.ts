@@ -96,3 +96,38 @@ export interface IProvider {
   createdAt: string
   updatedAt: string
 }
+
+interface Customer {
+  _id: string
+  name: string
+  email: string
+  phone: string
+  status: string
+  createdAt: string
+  updatedAt: string
+}
+interface Item {
+  course: Course
+  price: number
+}
+
+export interface OrderHistory {
+  _id: string
+  orderNumber: string
+  customer: Customer
+  items: Item[]
+  totalAmount: number
+  orderDate: string
+  orderStatus: string
+  transactionStatus: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface ItemCardProps {
+  title: string
+  description: string
+  type: string
+  image: string
+  price: string
+}

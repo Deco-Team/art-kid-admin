@@ -10,6 +10,8 @@ export const CoursePage = lazy(() => import('~/pages/Courses'))
 export const CourseDetailPage = lazy(() => import('~/pages/CourseDetail'))
 export const InstructorDetailPage = lazy(() => import('~/pages/InstructorDetail'))
 export const NewInstructorPage = lazy(() => import('~/pages/CreateInstructor'))
+export const OrderHistoryPage = lazy(() => import('~/pages/OrderHistory'))
+export const OrderDetailPage = lazy(() => import('~/pages/OrderDetail'))
 
 export default function Router() {
   const routes = useRoutes([
@@ -27,10 +29,9 @@ export default function Router() {
         { path: 'instructors/:instructorId', element: <InstructorDetailPage /> },
         { path: 'courses', element: <CoursePage /> },
         { path: 'courses/:courseId', element: <CourseDetailView /> },
-        { path: 'new-instructor', element: <NewInstructorPage /> }
-        // { path: 'new-instructor', element: <CreateInstructorPage />}
-        // { path: 'products', element: <ProductsPage /> },
-        // { path: 'blog', element: <BlogPage /> }
+        { path: 'new-instructor', element: <NewInstructorPage /> },
+        { path: 'history', element: <OrderHistoryPage /> },
+        { path: 'history/:orderId', element: <OrderDetailPage /> }
       ]
     },
     {
